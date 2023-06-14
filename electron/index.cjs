@@ -2,7 +2,7 @@ const path = require('path');
 
 const {dialog,  app, BrowserWindow, Tray, Menu } = require('electron');
 const isDev = require('electron-is-dev');
-const { autoUpdater } = require('electron-updater');
+ //const { autoUpdater } = require('electron-updater');
 let win = null;
 const instanceLock = app.requestSingleInstanceLock();
 
@@ -17,7 +17,7 @@ function createWindow() {
   } else {
     iconPath = path.join(__dirname, '../dist/icon-rounded.png');
   }
-  autoUpdater.checkForUpdatesAndNotify();
+  //autoUpdater.checkForUpdatesAndNotify();
 
   win = new BrowserWindow({
 	autoHideMenuBar: true,
@@ -26,6 +26,11 @@ function createWindow() {
   });
 
   createTray(win);
+
+  win.on('minimize', (event) => {
+    event.preventDefault();
+    win.hide();
+  });
 
   win.maximize();
   win.show();
@@ -65,15 +70,14 @@ const createTray = (window) => {
     },
   ]);
 
-  tray.on('click', () => {
-    win.maximize();
-    window.show();
-  });
+  tray.on('click', () => window.show());
   tray.setToolTip('Better ChatGPT');
   tray.setContextMenu(contextMenu);
 
   return tray;
 };
+
+//app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
