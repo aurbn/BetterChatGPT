@@ -1,6 +1,7 @@
 const path = require('path');
 
-const {dialog,  app, BrowserWindow, Tray, Menu } = require('electron');
+const {dialog,  app, BrowserWindow, Tray, Menu, shell} = require('electron');
+const contextMenu = require('electron-context-menu');
 const isDev = require('electron-is-dev');
  //const { autoUpdater } = require('electron-updater');
 let win = null;
@@ -9,6 +10,24 @@ const instanceLock = app.requestSingleInstanceLock();
 if (require('electron-squirrel-startup')) app.quit();
 
 const PORT = isDev ? '5173' : '51735';
+
+contextMenu({
+	prepend: (defaultActions, parameters, browserWindow) => [
+		{
+			label: 'Rainbow',
+			// Only show it when right-clicking images
+			visible: parameters.mediaType === 'image'
+		},
+		// {
+		// 	label: 'Search Google for “{selection}”',
+		// 	// Only show it when right-clicking text
+		// 	visible: parameters.selectionText.trim().length > 0,
+		// 	click: () => {
+		// 		shell.openExternal(`https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`);
+		// 	}
+		// }
+	]
+});
 
 function createWindow() {
   let iconPath = '';
