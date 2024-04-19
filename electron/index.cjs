@@ -36,6 +36,10 @@ function createWindow() {
     icon: iconPath,
   });
 
+  win.webContents.session.setProxy({proxyRules:"socks5://127.0.0.1:2080"}, function () {
+    mainWindow.loadURL('https://whatismyipaddress.com/');
+});
+
   createTray(win);
 
   win.on('minimize', (event) => {
